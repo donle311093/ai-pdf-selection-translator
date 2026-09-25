@@ -34,6 +34,7 @@ test('saved settings tolerate malformed data and do not reload a session-only ke
   assert.equal(result.maxChars, 100);
   assert.equal(result.timeoutSeconds, 180);
   assert.equal(result.triggerMode, 'auto');
+  assert.equal(normalizeSettings({ triggerMode: 'command' }).triggerMode, 'command');
   assert.equal(normalizeSettings({ apiKey: 'remembered', rememberKey: true }).apiKey, 'remembered');
 });
 

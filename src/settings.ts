@@ -66,8 +66,8 @@ export class SettingsForm {
     };
     renderLanguage();
     new Setting(container).setName('Reading').setHeading();
-    new Setting(container).setName('Translation trigger').setDesc('Translate automatically, on click, or only through a command.')
-      .addPicker(d => d.addOptions({ auto: 'Automatic', button: 'Click to translate', command: 'Command / hotkey only' })
+    new Setting(container).setName('Translation trigger').setDesc('Translate automatically, on click, or turn selection-triggered translation off.')
+      .addPicker(d => d.addOptions({ auto: 'Automatic', button: 'Click to translate', command: 'Off (command / hotkey only)' })
         .setValue(s.triggerMode).onChange(async value => { s.triggerMode = value as TriggerMode; await plugin.saveSettings(); }));
     new Setting(container).setName('Selection delay').setDesc('Milliseconds. Reduces calls while adjusting a selection.')
       .addSlider(slider => slider.setLimits(150, 2000, 50).setValue(s.delayMs).onChange(async value => { s.delayMs = value; await plugin.saveSettings(); }));

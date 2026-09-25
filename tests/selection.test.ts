@@ -80,7 +80,7 @@ test('button mode performs no network request until the user clicks Translate', 
   } finally { f.close(); }
 });
 
-test('command mode waits for explicit command and can use selection snapshot from command palette', async () => {
+test('off mode waits for explicit command and can use selection snapshot from command palette', async () => {
   let calls = 0;
   const f = fixture(async () => { calls++; return response('command translation'); }, 'command');
   try {

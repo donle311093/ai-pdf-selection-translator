@@ -28,27 +28,37 @@ export default class PdfSelectionTranslatorPlugin extends Plugin {
       callback: () => this.openSettings(),
     });
     this.addCommand({
-      id: 'toggle-auto-translation', name: 'Toggle automatic / click translation',
+      id: 'toggle-auto-translation', name: 'Cycle translation trigger mode',
       callback: () => { void this.toggleMode(); },
     });
     this.status = this.addStatusBarItem();
     this.status.classList.add('pst-statusbar');
-    this.status.title = 'PDF translation: click to toggle automatic / click translation';
+    this.status.title = 'PDF translation: click to cycle Automatic / Click / Off';
     this.registerDomEvent(this.status, 'click', () => { void this.toggleMode(); });
     this.updateStatus();
     this.app.workspace.onLayoutReady(() => {
       if (this.stopped) return;
       this.attachDocument(document);
       this.scanWindows();
+      this.updateStatus();
     });
-    this.registerEvent(this.app.workspace.on('layout-change', () => this.scanWindows()));
+    this.registerEvent(this.app.workspace.on('layout-change', () => {
+      this.scanWindows();
+      this.updateStatus();
+    }));
     this.registerEvent(this.app.workspace.on('window-open', (_workspace, win) => this.attachDocument(win.document)));
     this.registerEvent(this.app.workspace.on('window-close', (_workspace, win) => {
       this.controllers.get(win.document)?.destroy();
       this.controllers.delete(win.document);
     }));
-    this.registerEvent(this.app.workspace.on('file-open', () => this.closePopovers()));
-    this.registerEvent(this.app.workspace.on('active-leaf-change', () => this.closePopovers()));
+    this.registerEvent(this.app.workspace.on('file-open', () => {
+      this.closePopovers();
+      this.updateStatus();
+    }));
+    this.registerEvent(this.app.workspace.on('active-leaf-change', () => {
+      this.closePopovers();
+      this.updateStatus();
+    }));
   }
 
   private scanWindows(): void {
@@ -92,13 +102,20 @@ export default class PdfSelectionTranslatorPlugin extends Plugin {
   }
 
   private updateStatus(): void {
-    if (this.status) this.status.textContent = `Translate · ${this.settings.triggerMode === 'auto' ? 'Automatic' : this.settings.triggerMode === 'button' ? 'Click' : 'Hotkey'}`;
+    if (!this.status) return;
+    this.status.toggle(this.app.workspace.getActiveFile()?.extension === 'pdf');
+    this.status.textContent = `Translate · ${this.settings.triggerMode === 'auto' ? 'Automatic' : this.settings.triggerMode === 'button' ? 'Click' : 'Off'}`;
   }
 
   private async toggleMode(): Promise<void> {
-    this.settings.triggerMode = this.settings.triggerMode === 'auto' ? 'button' : 'auto';
+    const modes = ['auto', 'button', 'command'] as const;
+    this.settings.triggerMode = modes[(modes.indexOf(this.settings.triggerMode) + 1) % modes.length];
     await this.saveSettings();
-    new Notice(this.settings.triggerMode === 'auto' ? 'PDF: translate selected text automatically' : 'PDF: click to translate selected text');
+    new Notice(this.settings.triggerMode === 'auto'
+      ? 'PDF: translate selected text automatically'
+      : this.settings.triggerMode === 'button'
+        ? 'PDF: click to translate selected text'
+        : 'PDF: automatic translation off; command / hotkey remains available');
   }
 
   refreshSettingsForms(): void {
