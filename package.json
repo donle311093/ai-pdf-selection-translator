@@ -1,13 +1,13 @@
 {
   "name": "obsidian-pdf-selection-translator",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "private": true,
   "description": "LLM selection translation for Obsidian PDF and PDF++",
   "license": "MIT",
-  "author": "xfrrn",
+  "author": "donle311093",
   "repository": {
     "type": "git",
-    "url": "https://github.com/xfrrn/obsidian-pdf-selection-translator.git"
+    "url": "https://github.com/donle311093/ai-pdf-selection-translator.git"
   },
   "scripts": {
     "build": "node scripts/build.mjs",

@@ -1,10 +1,10 @@
 {
   "id": "pdf-selection-translator",
   "name": "PDF Selection Translator",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "minAppVersion": "1.13.7",
   "description": "Translate selected PDF words and passages with your own OpenAI-compatible model, alongside PDF++.",
-  "author": "xfrrn",
-  "authorUrl": "https://github.com/xfrrn",
+  "author": "donle311093",
+  "authorUrl": "https://github.com/donle311093",
   "isDesktopOnly": true
 }
