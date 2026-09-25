@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.test-output/
+.obsidian/
+data.json
+.env
+.env.*
+*.log
+*.zip
+.DS_Store
